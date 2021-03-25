@@ -68,6 +68,7 @@ The aim of this paper is to introduce the work of  \cite{wang2015supervised}. Th
 \subsection{Supervised EP detection}
 \noindent
 \subsection{Unsupervised EP discovery}
+\noindent
 
 \bigskip
 \section{Methods}
@@ -90,7 +91,8 @@ A Perceptron is a single-neuron model that acts as a \textbf{binary linear class
 
 %\subsection{Hidden Markov Model}
 %\subsection{Gaussian Mixture Model}
-%\subsection{Universal Phoneme Posteriorgram}
+\subsection{\textbf{Universal Phoneme Posteriorgram}}
+\noindent Universal Phoneme Posteriorgram (UPP) is used as the fundamental frame-level feature of supervised EP discovery in \cite{wang2015supervised}. The motivation behind this is has to do with the nature of EPs in language learning. Usually EPs are caused by articulator mechanisms or acoustic phenomena present in the target language but missing from learners' native languages as suggested by \cite{wang2015supervised}. However, the discrepancies between mispronunced instances and canonical pronounciations can be small but still obvious to the native ear. Therefore if one simply compare the pronunciations from learners of mixed languages in the same acoustic space, for example the acoustic space spanned by MFCCs, the pronunciations are usually too close to be distinguished by clustering algorithms. What UPP extraction does is to use an MLP as a posterior probability estimator to span the pronunciation instances by phoneme posteriors. Each frame of MFCC feature is transformed into a vector of posterior probabilities of all predefined phonemes in the training corpora of mixed languages.
 \subsection{Cascaded Adaptation Techniques}
 \subsection{Clustering}
 \subsection{Metrics}
