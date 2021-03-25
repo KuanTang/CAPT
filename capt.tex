@@ -60,13 +60,34 @@ The aim of this paper is to introduce the work of  \cite{wang2015supervised}. Th
 
 \bigskip
 \section{Theoretical Framework}
-\subsection{Error Patterns}
+\subsection{\textbf{Error Patterns}}
+
+\noindent Error patterns (EPs) in pronunciation training are frequently encountered mispronunciations that have intrinsic commonalities. In other words, mispronunciations of the same error pattern usually display a high level of intra-group similarity, although they can still be very close to the canonical pronunciation or other EPs.\\
+
+\noindent The discovery and detection of EPs can help give more informative and targeted feedbacks in pronunciation training. For example, language learners of different L1s may all pronunce the word wrong (wrong as in deviatation from the canonical pronunciation), but their mispronunciations can be incorrect in different ways. It would be more helpful if the CAPT system can provide feedbacks that are specific enough to show the area of improvement. EPs answer the question "In what way is the given pronunciation wrong?" instead of simply stating it as an incorrect pronunciation.
 \subsection{Supervised EP detection}
+\noindent
 \subsection{Unsupervised EP discovery}
 
 \bigskip
 \section{Methods}
-\subsection{From Peceptrons to Multilayer Perceptrons}
+\subsection{\textbf{From Perceptrons to Multilayer Perceptrons}}
+
+A Perceptron is a single-neuron model that acts as a \textbf{binary linear classifier}. It is inspired by the biological neuron and can be seen as an abstraction of it. The perceptron receives a real-valued feature vector as input, it also has a weight vector associated with the input vector, which is to be trained. A weighted sum is calculated and passed into an activation function before the output layer. There are varies kinds of activation functions, they help normalise the weighted sum to a range between 0 and 1, or, in some cases, -1 and 1. Like the biological neuron needs an action potential above the threshold of -55 mA to "fire", the perceptron neuron uses the activation function and decides whether to pass on the output or not (acting like a gate), or, in the case of a binary classifier, it decides if the input belongs to a class or not. In the case of the example below, a step function is used where 0 is the threshold, everything above 0 is mapped to 1 and 0 otherwise. 
+\begin{figure*}
+  \includegraphics{perceptron1.png}
+  \caption{biological neuron vs. perceptron, adopted from \cite{IF:perceptron}}
+\end{figure*}
+
+\noindent As suggested by the name, multilayer perceptrons (MLPs) have more than one (usually fully connected) layers. The most simple schematic MLPs illustrated in Figure \ref{fig:mlp} have one input layer, a hidden layer and an output layer. There can be more than one hidden layers, but usually one is enough. MLPs are a class of feedforward artificial neural network (ANN), with "feedforward" meaning single-way, acyclic movement, just like biological neurons.\\ 
+\begin{figure}
+  \includegraphics[width=0.9\textwidth]{mlp3.png}
+  \caption{A schematic multilayer perceptron model, adopted from \cite{becominghuman:MLP}}
+  \label{fig:mlp}
+\end{figure}
+\noindent MLPs use backpropagation (BP) as training method, which compares the results to the desired value and adjust the weights that contributed to the error most in each layer using the chain rule. The adjusted weights are used in the next training cycle. The training process terminates when the loss function is minimised.
+
+
 %\subsection{Hidden Markov Model}
 %\subsection{Gaussian Mixture Model}
 %\subsection{Universal Phoneme Posteriorgram}
