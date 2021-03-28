@@ -21,9 +21,14 @@
 \setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
 \graphicspath{{graphics/}}
 
-\title{\cite{wang2015supervised} Summary and Terminology\thanks{term paper for Acoustic Phonetics WS20/21, Seminar f\"ur Sprachwissenschaft, Universit\"at T\"ubingen\\}}
-\author{Jingwen LI and Kuan TANG\thanks{\it{jingwen.li/kuan.tang@student.uni-tuebingen.de}}}
-\date{}
+\title{{Term paper for Acoustic Phonetics WS20/21\\\cite{wang2015supervised} Summary and Terminology}}
+
+
+\author{Jingwen LI and Kuan TANG
+\thanks{
+Seminar f\"ur Sprachwissenschaft, Eberhard Karls Universit\"at T\"ubingen \\
+{\it{jingwen.li/kuan.tang@student.uni-tuebingen.de}}}}
+\date{28. Mar 2021}
 
 % \usepackage{fancyvrb}
 % \fvset{fontsize=\normalsize}
@@ -47,32 +52,42 @@
 \begin{document}
 \maketitle
 
-\begin{abstract}%delete if unnecessary
-\noindent Abstract goes here. Delete if unnecessary.
+\begin{abstract}
+\noindent This term paper aims to introduce the main concepts and methods of \cite{wang2015supervised}. The content and authorship of this paper as follows: In the first section, Kuan summaries the whole paper in general, and make clear that the research questions, methodology, and experimental results in \cite{wang2015supervised}. In section 2, Jingwen introduces the new frameworks for both Supervised EP detection and  Unsupervised EP discovery respectively through simple and vivid examples to explain the core issues of the (un)supervised acoustic patterns. On this basis, Kuan gives more details about the concepts of Clustering and Metric and the applications of both in the paper in section 3, and then put forward two questions after reading the full text in the end.
 \end{abstract}
 
-\bigskip
-\section{Introduction}
-
-The aim of this paper is to introduce the work of  \cite{wang2015supervised}. The content and authorship  of this paper as follows: In the section one, Kuan summarizes the whole paper \cite{wang2015supervised} in general. In section 2, Jingwen introduces the new frameworks for both Supervised EP detection and  Unsupervised EP discovery. In section 3, Kuan gives more details 
-
-\cite{wang2015supervised} propose new frameworks for both Supervised Error Patterns Detection and Unsupervised EP Discovery \footnote{Web link \url{https://www.google.com}}.
 
 \bigskip
-\section{Theoretical Framework}
-\subsection{\textbf{Error Patterns}}
+\section{1. \textbf{Summary}}
+
+How to apply the Speech Processing Technology in Second Language Learning (SLL)? How to generate informative feedback for Second Language Learners (SLLs) to improve their pronunciation based on Computer-assisted language learning (CALL)  and Computer-aided pronunciation training (CAPT)\sidenote{Computer-aided pronunciation training (CAPT) aims to analyze the produced utterance to offer feedback to the language learner in the form of quantitative or qualitative evaluations of the pronunciation proficiency. }? How to offer SLLs not only quantitative measures of language proficiency, but also specific types of errors the they have made? These are three trends which have led to substantial efforts toward CALL to meet the strong demand of SLL. At least two different but closely related Pronunciation error patterns (EPs)\sidenote{Pronunciation error patterns (EPs) are patterns of mispronunciation frequently produced by language learners, and are usually different for different pairs of target and native languages. } tasks in CAPT: First, to derive the EP dictionary for a given L1-L2 pair, or a given L2 but non-specific L1; Second, to verify whether a voice segment produced by a learner is correct, or if it belongs to a specific EP based on the EP dictionary. 
+
+
+
+\cite{wang2015supervised} propose two new novel frameworks for both Supervised Error Patterns Detection and Unsupervised EP Discovery.  For supervised EP detection,  they use hierarchical multi-layer perceptrons (MLPs) as the EP classifiers to be integrated with the baseline using HMM/GMM in a two-pass Viterbi decoding architecture.  As for unsupervised EP discovery, they  use the Hierarchical Agglomerative Clustering (HAC) algorithm to explore sub-segmental variation within phoneme segments and produce fixed-length segment-level feature vectors to distinguish different EPs. 
+
+They tested K-means \sidenote{Assuming a known number of EPs} and the Gaussian mixture model with the minimum description length principle \sidenote{Estimating an unknown number of EPs} for EP discovery.  And they also propose to use the universal phoneme posteriorgram (UPP), derived from an MLP trained on corpora of mixed languages, as frame-level features in both supervised detection and unsupervised discovery of EPs. 
+
+Preliminary experiments offered very encouraging results.  As the experimental results shown, comparing with other models, the new framework enhances the power of EP diagnosis, and using UPP achieves the best performance and is useful in analyzing the mispronunciation produced by language learners.
+
+
+
+
+
+\bigskip
+\section{2. \textbf{Theoretical Framework}}
+\subsection{2.1 \textbf{Error Patterns}}
 
 \noindent Error patterns (EPs) in pronunciation training are frequently encountered mispronunciations that have intrinsic commonalities. In other words, mispronunciations of the same error pattern usually display a high level of intra-group similarity, although they can still be very close to the canonical pronunciation or other EPs.\\
 
 \noindent The discovery and detection of EPs can help give more informative and targeted feedbacks in pronunciation training. For example, language learners of different L1s may all pronunce the word wrong (wrong as in deviatation from the canonical pronunciation), but their mispronunciations can be incorrect in different ways. It would be more helpful if the CAPT system can provide feedbacks that are specific enough to show the area of improvement. EPs answer the question "In what way is the given pronunciation wrong?" instead of simply stating it as an incorrect pronunciation.
-\subsection{Supervised EP detection}
+\subsection{2.1.1. Supervised EP detection}
 \noindent
-\subsection{Unsupervised EP discovery}
+\subsection{2.1.2. Unsupervised EP discovery}
 \noindent
 
-\bigskip
-\section{Methods}
-\subsection{\textbf{From Perceptrons to Multilayer Perceptrons}}
+
+\subsection{2.2 \textbf{From Perceptrons to Multilayer Perceptrons}}
 
 A Perceptron is a single-neuron model that acts as a \textbf{binary linear classifier}. It is inspired by the biological neuron and can be seen as an abstraction of it. The perceptron receives a real-valued feature vector as input, it also has a weight vector associated with the input vector, which is to be trained. A weighted sum is calculated and passed into an activation function before the output layer. There are varies kinds of activation functions, they help normalise the weighted sum to a range between 0 and 1, or, in some cases, -1 and 1. Like the biological neuron needs an action potential above the threshold of -55 mA to "fire", the perceptron neuron uses the activation function and decides whether to pass on the output or not (acting like a gate), or, in the case of a binary classifier, it decides if the input belongs to a class or not. In the case of the example below, a step function is used where 0 is the threshold, everything above 0 is mapped to 1 and 0 otherwise. 
 \begin{figure*}
@@ -89,18 +104,56 @@ A Perceptron is a single-neuron model that acts as a \textbf{binary linear class
 \noindent MLPs use backpropagation (BP) as training method, which compares the results to the desired value and adjust the weights that contributed to the error most in each layer using the chain rule. The adjusted weights are used in the next training cycle. The training process terminates when the loss function is minimised.
 
 
-%\subsection{Hidden Markov Model}
-%\subsection{Gaussian Mixture Model}
-\subsection{\textbf{Universal Phoneme Posteriorgram}}
+\subsection{2.3 \textbf{Universal Phoneme Posteriorgram}}
 \noindent Universal Phoneme Posteriorgram (UPP) is used as the fundamental frame-level feature of supervised EP discovery in \cite{wang2015supervised}. The motivation behind this is has to do with the nature of EPs in language learning. Usually EPs are caused by articulator mechanisms or acoustic phenomena present in the target language but missing from learners' native languages as suggested by \cite{wang2015supervised}. However, the discrepancies between mispronunced instances and canonical pronounciations can be small but still obvious to the native ear. Therefore if one simply compare the pronunciations from learners of mixed languages in the same acoustic space, for example the acoustic space spanned by MFCCs, the pronunciations are usually too close to be distinguished by clustering algorithms. What UPP extraction does is to use an MLP as a posterior probability estimator to span the pronunciation instances by phoneme posteriors. Each frame of MFCC feature is transformed into a vector of posterior probabilities of all predefined phonemes in the training corpora of mixed languages.
-\subsection{Cascaded Adaptation Techniques}
-\subsection{Clustering}
-\subsection{Metrics}
 
+
+
+\subsection{2.4 Hidden Markov Model}
+
+\subsection{2.5 Gaussian Mixture Model}
+
+
+\clearpage
+\bigskip
+\section{\textbf{3. Methods}}
+\subsection{\textbf{3.1 Clustering}}
+
+
+Before starting about Clustering, we should understand first what is a cluster. \footnote{This part is based on Seema Singh
+ (2018) "An Introduction To Clustering". Here is the Web link \url{https://medium.datadriveninvestor.com/an-introduction-to-clustering-61f6930e3e0b}} Simply speaking,  \textbf{Cluster} is the collection of data. The data objects in one cluster are similar to one another within the same group (class or category),  and are different from the objects in the other clusters. 
+The closer the objects in a cluster, the more likely they belong to the same cluster.
+
+\begin{figure*}
+ \includegraphics[width=0.6\textwidth]{clustering.png}
+  \caption{clustering, adopted from \url{https://medium.datadriveninvestor.com/an-introduction-to-clustering-61f6930e3e0b}}
+\end{figure*}
+
+Based on the definition of the Cluster,  as an unsupervised learning technique in which there is predefined classes and prior information, Clustering means how the data should be grouped or labeled into separate classes. 
+It could also be considered as Exploratory Data Analysis (EDA) \footnote{Exploratory Data Analysis refers to the critical process of performing initial investigations on data to discover patterns to spot anomalies to test hypothesis and to check assumptions with the help of summary statistics and graphical representations.} process which help us to discover hidden patterns of interest or structure in data. Clustering can work as a standalone tool to get the insights about the data distribution or as a preprocessing step in other algorithms.
+
+
+In \cite{wang2015supervised}, they uses Hierarchical Agglomerative Clustering (HAC) to define segment-level features. According to \cite{chhabra2020fair}, Hierarchical Agglomerative Clustering (HAC) refers to a class of greedy unsupervised learning algorithms that seek to build a hierarchy between data points while clustering them in a bottom-up fashion. The HAC algorithm used in \cite{wang2015supervised} automatically arranges the frames in a speech segment into a tree-structured hierarchy based on the merging order of sub-segments, in which similar adjacent frames are clustered together in lower layers, while relatively dissimilar adjacent clusters are merged in higher layers. 
+
+
+\subsection{\textbf{3.2 Metrics}}
+
+There are many different metrics for evaluating clustering algorithms. 
+Metrics are measures of quantitative assessment commonly used for comparing, and tracking performance or production. Metrics can be used in a variety of scenarios.  \cite{wang2015supervised}  define the pair-wise true acceptance (TA’), true rejection (TR’), false acceptance (FA’), and false rejection (FR’) for clustering tasks based on all instance pairs. Let us explain these one by one. 
+
+The True Accept rate (TA’) is a statistic used to measure biometric performance when performing the verification task. It is the percentage of times a system (correctly) verifies a true claim of identity. While the True Reject rate (TR’) is a statistic used to measure biometric performance when performing the verification task. It refers to the percentage of times a system (correctly) rejects a false claim of identity.
+
+
+False Acceptance (FA’) is the percentage of identification instances in which unauthorised persons are incorrectly accepted, and it occurs when an unauthorized subject is accepted as valid. While the False Rejection (FR') is the percentage of identification instances in which authorised persons are incorrectly rejected. As the number of false acceptances (FA') goes down, the number of false rejections (FR') will go up and vice versa.
+
+\begin{figure*}
+ \includegraphics[width=0.6\textwidth]{metrics.png}
+  \caption{Hierarchical structure of the metrics used in EP detection adopted from  \cite{wang2015supervised}}
+\end{figure*}
 
 \bigskip
-\section{Post-reading questions}
-
+\section{4. Post-reading questions}
+In both supervised EP detection and unsupervised EP discovery, \cite{wang2015supervised} propose to utilized the universal phoneme posteriorgram (UPP), derived from a multi-layer perceptron (MLP) trained on corpora of mixed languages, but if this methods can be applied to other dataset? and how to explain the differences of performance between the  two tasks?
 
 %\newpage
 
@@ -296,6 +349,8 @@ A Perceptron is a single-neuron model that acts as a \textbf{binary linear class
 % letterspacing.  The case of the \Verb|\textsc| argument is left as is,
 % however.  This allows one to use both uppercase and lowercase letters:
 % \textsc{The Initial Letters Of The Words In This Sentence Are Capitalized.}
+
+
 
 \bibliography{references}
 \bibliographystyle{apalike}
