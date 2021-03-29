@@ -53,7 +53,7 @@ Seminar f\"ur Sprachwissenschaft, Eberhard Karls Universit\"at T\"ubingen \\
 \maketitle
 
 \begin{abstract}
-\noindent This term paper aims to introduce the main concepts and methods of \cite{wang2015supervised}. The content and authorship of this paper as follows: In the first section, Kuan summaries the whole paper in general, and make clear that the research questions, methodology, and experimental results in \cite{wang2015supervised}. In section 2, Jingwen introduces the new frameworks for both Supervised EP detection and  Unsupervised EP discovery respectively through simple and vivid examples to explain the core issues of the (un)supervised acoustic patterns. On this basis, Kuan gives more details about the concepts of Clustering and Metric and the applications of both in the paper in section 3, and then put forward two questions after reading the full text in the end.
+\noindent This term paper aims to introduce the main concepts and methods of \cite{wang2015supervised}. The content and authorship of this paper as follows: In the first section, Kuan summaries the whole paper in general, and make clear that the research questions, methodology, and experimental results in \cite{wang2015supervised}. In section 2, Jingwen introduces the theoretical frameworks for both Supervised EP detection and Unsupervised EP discovery respectively as well as simple and vivid examples to explain the core model structures used in this paper. On this basis, Kuan gives more details about the concepts of clustering and metrics and the applications of both in the paper in section 3, and then put forward two questions after reading the full text in the end.
 \end{abstract}
 
 
@@ -80,13 +80,13 @@ Preliminary experiments offered very encouraging results.  As the experimental r
 
 \textbf{Error patterns} (EPs) in pronunciation training are frequently encountered mispronunciations that have intrinsic commonalities. In other words, mispronunciations of the same error pattern usually display a high level of intra-group similarity, although they can still be very close to the canonical pronunciation or other EPs.\\
 
-EPs can help give more informative and targeted feedbacks in pronunciation training. For example, language learners of different L1s may all pronunce the word wrong (wrong as in deviatation from the canonical pronunciation), but their mispronunciations can be incorrect in different ways. It would be more helpful if the CAPT system can provide feedbacks that are specific enough to show the area of improvement. EPs answer the question \textbf{\textit{"In what way is the given pronunciation wrong?"}} instead of simply stating it as an incorrect pronunciation.\\
+EPs can help give more informative and targeted feedbacks in pronunciation training. For example, language learners of different L1s may all pronounce the word wrong (wrong as in deviation from the canonical pronunciation), but their mispronunciations can be incorrect in different ways. It would be more helpful if the CAPT system can provide feedbacks that are specific enough to show the area of improvement. EPs answer the question \textbf{\textit{"In what way is the given pronunciation wrong?"}} instead of simply stating it as an incorrect pronunciation.\\
 
 
 \subsection{2.1.1 \textbf{Supervised EP Detection and Unsupervised EP Discovery}}
-\textbf{Supervised EP detection}, the most commonly used technique, relies on linguistic expertise of not only the target language, but also the L1s of the learners. Thus defining a full-coverage EP dictionary for different language pairs or mixed languages can already be very expensive. As explained above, EPs are similar to their canonical pronunciations. Apart from that, EPs that deviates from the same standard native pronunciation are also similar to each other, making EP detection a rather difficult task even if EP dictionaries can be provided, either generated manually or automatically derived (the task of \textbf{unsupervised EP discovery}). Unsupervised EP discovery aims to derive EPs from corpora directly, without language-based knowledge as precursor. \\
+\textbf{Supervised EP detection}, the most commonly used technique, relies on linguistic expertise of not only the target language, but also the L1s of the learners. Thus defining a full-coverage EP dictionary for different language pairs or mixed languages can be very expensive. As explained above, EPs are similar to their canonical pronunciations. Apart from that, EPs that deviates from the same standard native pronunciation are also similar to each other, making EP detection a rather difficult task even if EP dictionaries can be provided, either generated manually or automatically derived (the task of \textbf{unsupervised EP discovery}). Unsupervised EP discovery aims to derive EPs from corpora directly, without language-based knowledge as precursor. \\
 
-To put it simply, supervised EP detection is like putting pronunciation instances into a divided space, like the box displayed in Figure \ref{fig:box}, each cell is an EP advised by experts. The division of the space depends on the training of the model. On the other hand, unsupervised EP discovery do not presuppose the boundaries or the number of EPs (at first). Take \textbf{Hierarchical Agglomerative Clustering} (HAC) as an example, the algorithm starts with each instance in its own cluster and then simply compares the instances using distance\sidenote{There are many distance measures to choose from, to name a few, Euclidean distance, Manhattan distance...} between them in high-dimensional space, the most similar instances are grouped together, until all instances are in the same group. Categories/clusters are in this sense "self-organised" in a bottom-up manner and can be adjusted depending on the desired granularity. This is where human make decisions, a high cut-off at the resulting dendrogram in Figure \ref{fig:dendro} means fewer classes while a low cut-off produces more classes. 
+To put it simply, supervised EP detection is like putting pronunciation instances into a divided space, like the box displayed in Figure \ref{fig:box}, each cell is an EP advised by experts. The division of the space depends on the training of the model. On the other hand, unsupervised EP discovery do not presuppose the boundaries or the number of EPs\sidenote{except K-means} (at first). Take \textbf{Hierarchical Agglomerative Clustering} (HAC) as an example, the HAC algorithm starts with each instance in its own cluster and then simply compares the instances using distance\sidenote{There are many distance measures to choose from, to name a few, Euclidean distance, Manhattan distance...} between them in high-dimensional space, the most similar instances are grouped together, until all instances are in the same group. Categories/clusters are in this sense "self-organised" in a bottom-up manner and can be adjusted depending on the desired granularity. This is where human make decisions, a high cut-off at the resulting dendrogram in Figure \ref{fig:dendro} means fewer classes while a low cut-off produces more classes. 
 \bigskip
 \begin{marginfigure}
   \includegraphics{box.png}
@@ -102,7 +102,7 @@ To put it simply, supervised EP detection is like putting pronunciation instance
 
 \subsection{2.2 \textbf{Heterogeneous Initialization of Acoustic Modeling of EPs}}
 
-In supervised detection of EPs, an \textbf{acoustic model} (AM) is needed for each EP. \cite{wang2015supervised} asked language teachers to create an extensive set 0f 152 EPs, whose description is based on the phonemes of Chinese and English. For example, \textit{l\_000} represents the canonical pronunciation of l, while \textit{l\_010} is defined as something pronounced like the English \textit{l}. Since EPs are defined using a  \textbf{\textit{"pronounced-as"}} relationship\sidenote{Notice that the \textbf{\textit{"pronounced-as"}} relationship only describes a pronunciation instance and has nothing to do with the learners' L1.}, it became natural to use existing acoustic models for phonemes as a starting point. Duplicates of phoneme models trained for other corpora are used as the initial EP models, this process is referred to as \textbf{\textit{heterogeneous model initialization}}. A comparison of \textit{heterogeneous model initialization} and \textbf{\textit{homogeneous model initialization}} is illustrated in Figure \ref{fig:init}, where a clear benefit of heterogenous initialization can be seen: Without any anchor points, apart from the experience and knowledge of language teachers, different EPs of the same canonical pronunciation are hard to locate with respect to the correct pronunciation (homogeneous) in the conceptual pronunciation space, let alone to describe them in a human-understandable way, which also makes it almost impossible for human annotators to create target labels. Heterogenous initialization provides the ground to describe the error patterns, which facilitates human understanding as well as acoustic modeling.
+In supervised detection of EPs, an \textbf{acoustic model} (AM) is needed for each EP. \cite{wang2015supervised} asked language teachers to create an extensive set of 152 EPs, whose descriptions are based on phonemes of Chinese and English. For example, \textit{l\_000} represents the canonical pronunciation of l, while \textit{l\_010} is defined as something pronounced like the English \textit{l}. Since EPs are defined using a  \textbf{\textit{"pronounced-as"}} relationship\sidenote{Notice that the \textbf{\textit{"pronounced-as"}} relationship only describes a pronunciation instance and has nothing to do with the learners' L1.}, it became natural to use existing acoustic models for phonemes as a starting point. Duplicates of phoneme models trained for other corpora are used as the initial EP models, this process is referred to as \textbf{\textit{heterogeneous model initialization}}. A comparison of \textit{heterogeneous model initialization} and \textbf{\textit{homogeneous model initialization}} is illustrated in Figure \ref{fig:init}, where a clear benefit of heterogenous initialization can be seen: Without any anchor points, apart from the experience and knowledge of language teachers, different EPs of the same canonical pronunciation are hard to locate with respect to the correct pronunciation (homogeneous) in the conceptual pronunciation space, let alone to describe them in a human-understandable way, which also makes it almost impossible for human annotators to create target labels. Heterogenous initialization provides the ground to describe the error patterns, which facilitates human understanding as well as acoustic modeling.
 
 \begin{figure}
   \includegraphics{init.png}
@@ -119,7 +119,7 @@ A \textbf{Perceptron} is a single-neuron model that acts as a \textbf{binary lin
   \includegraphics{perceptron1.png}
   \caption{biological neuron vs. perceptron, adopted from \cite{IF:perceptron}}
 \end{figure*}
-As suggested by the name, \textbf{multilayer perceptrons} (MLPs) have more than one (usually fully connected) layers. The most simple schematic MLPs illustrated in Figure \ref{fig:mlp} have one input layer, a hidden layer and an output layer. There can be more than one hidden layers, but usually one is enough. MLPs are a class of feedforward artificial neural network (ANN), with "\textbf{feedforward}" meaning single-way, acyclic movement, just like biological neurons.\\ 
+As suggested by the name, \textbf{multilayer perceptrons} (MLPs) have more than one (usually fully connected) layers. The most simple schematic MLP structure illustrated in Figure \ref{fig:mlp} has one input layer, a hidden layer and an output layer. There can be more than one hidden layers, but usually one is enough. MLPs are a class of feedforward artificial neural network (ANN), with "\textbf{feedforward}" meaning single-way, acyclic movement, just like biological neurons.\\ 
 \begin{figure}[h!]
 \centering
   \includegraphics[width=0.9\textwidth]{mlp3.png}
@@ -131,7 +131,7 @@ MLPs use \textbf{backpropagation} (BP) as training method, which compares the re
 
 
 \subsection{2.4 \textbf{Universal Phoneme Posteriorgram}}
-\noindent \textbf{Universal Phoneme Posteriorgram} (UPP) is used as the fundamental frame-level feature of supervised EP discovery in \cite{wang2015supervised}. The motivation behind this is has to do with the nature of EPs in language learning. Usually EPs are caused by articulator mechanisms or acoustic phenomena present in the target language but missing from learners' native languages as suggested by \cite{wang2015supervised}. However, the discrepancies between mispronunced instances and canonical pronounciations can be small but still obvious to the native ear. Therefore if one simply compare the pronunciations from learners of mixed languages in the same acoustic space, for example the acoustic space spanned by MFCCs, the pronunciations are usually too close to be distinguished by clustering algorithms. What UPP extraction does is to use an MLP as a posterior probability estimator to span the pronunciation instances by phoneme posteriors. Each frame of MFCC feature is transformed into a vector of posterior probabilities of all predefined phonemes in the training corpora of mixed languages.
+\noindent \textbf{Universal Phoneme Posteriorgram} (UPP) is used as the fundamental frame-level feature of supervised EP discovery in \cite{wang2015supervised}. The motivation behind this has to do with the nature of EPs in language learning. Usually EPs are caused by articulator mechanisms or acoustic phenomena present in the target language but missing from learners' native languages as suggested by \cite{wang2015supervised}. However, the discrepancies between mispronounced instances and canonical pronunciations can be small but still obvious to the native ear. Therefore if one simply compare the pronunciations from learners of mixed languages in the same acoustic space, for example the acoustic space spanned by MFCCs, the pronunciations are usually too close to be distinguished by clustering algorithms. What UPP extraction does is to use an MLP as a posterior probability estimator to span the pronunciation instances by phoneme posteriors. Each frame of MFCC feature is transformed into a vector of posterior probabilities of all predefined phonemes in the training corpora of mixed languages.
 \begin{figure}[h!]
 \centering
   \includegraphics[width=0.81\textwidth]{upp.png}
@@ -141,7 +141,42 @@ MLPs use \textbf{backpropagation} (BP) as training method, which compares the re
 
 
 
-%\subsection{2.4 Hidden Markov Model}
+\subsection{2.5 \textbf{Hidden Markov Model and Viterbi Decoding}}
+
+\subsection{2.5.1 \textbf{Markov Chains and HMM}}
+
+\begin{marginfigure}
+ \includegraphics[width=1\textwidth]{chain.png}
+  \caption{A Markov chain for weather, showing states and transitions, adopted from \cite{slp}}
+  \label{fig:chain}
+\end{marginfigure}
+
+\textbf{Markov chains} model the \textbf{probabilities of sequences} of random variables, which are usually termed \textit{states}. The power of the Markov chain lies in the Markov assumption that when predicting the next state, only the current state matters\sidenote{When predicting the future, the past doesn't matter, only the present does.}. Figure \ref{fig:chain} shows a simple Markov chain that models the weather. Each circle represents a state, the arrows represent state transition, with the digits being the transition probability. Let's say today is cold, then we focus on the \textsc{cold} state, there are 3 arrows pointing out from this state, so tomorrow (next state) is either \textsc{cold} again with probability of 0.8, \textsc{hot} or \textsc{warm}, each with probability of 0.1. The probabilities of all possible transitions sum to 1.\\
+
+Hidden Markov Models (HMMs) are Markov chains with \textbf{\textit{hidden states}}. Markov chain is useful when we need to compute the probability for a sequence of observable events, but when what we are interested in cannot be observed directly and we know that it is related with what can be observed, then we use HMM. For example, Jason, as a normal boy, enjoys ice-cream. Although he has ice-cream every day, the amount of ice-creams he has each day differs. Since he is normal, he is more likely to have more ice-creams on hot days and less on cold days. Figure \ref{fig:hmm} shows an HMM that models Jason's ice-cream eating behaviour and the weather. The octagon shows the distribution of the hidden states\sidenote{This distribution can be translated as follows: On any day, the probability that it is a hot day is 0.8, the probability that it is a cold day is 0.2.}. The squares are the \textbf{\textit{emission probabilities}} or \textbf{\textit{observation likelihoods}}\sidenote{Square B${_1}$ can be translated as: On a hot day, it is 20\% chance that Jason eats one ice-cream, 40\% that he eats 2 and 40\% that he eats 3.}. The rest is the same as the Markov chain explained above.\\
+\vspace{5em}
+\begin{figure}
+ \includegraphics[width=1\textwidth]{hmm.png}
+  \caption{A simplistic HMM for relating numbers of ice-creams consumed by Jason each day (observations) to the weather (\textit{Hot(H)} or \textit{Cold(C)}, hidden states), adopted from \cite{slp}}
+  \label{fig:hmm}
+\end{figure}
+Hidden Markov Model (HMM) in Speech Recognition is used to model unit of speech, like words or phones.
+
+\subsection{2.5.1 \textbf{Viterbi Decoding}}
+
+One of the problems that HMM can solve is the \textbf{decoding problem}:\\
+\bigskip
+\textbf{\textit{Given an observation sequence and an HMM, find the best hidden state sequence.}}\\
+\bigskip
+Using the ice-cream example above, it means that if for the last 3 days the number of ice-creams Jason had is the observed sequence 3 1 3, what are the weather of these three days most likely like?\\
+\textbf{Viterbi algorithm} solves this decoding problem by finding (and remembering) the best (most likely) path at each step. Figure \ref{fig:vi} shows the observations in squares and hidden states in circles. All possible states are drawn, but only the current most likely state is chosen to form the optimal path. For instance, since the initial weather distribution for (\textsc{hot}, \textsc{cold}) is (0.8, 0.2), and on the first day Jason had 3 ice-creams, the probability of the hidden state being \textsc{hot} is the product of 0.8 and the observation likelihood\sidenote{the probability of Jason eating 3 ice-creams given it is a hot day}. Similarly we can calculate the probability of the hidden state being \textsc{cold}. Since \textsc{hot} is 0.32 and \textsc{cold} is 0.02, we pick \textsc{hot}. For the next steps, we don't need the initial weather distribution $\pi$ anymore, we should only consider the current hidden state and the transitions to the next possible hidden states. Using Viterbi decoding, we obtain the thick arrows as the optimal path.
+
+\begin{figure*}
+ \includegraphics[width=1\textwidth]{viterbi.png}
+  \caption{Viterbi trellis for computing the best path through the hidden state space for the ice-cream eating events 3-1-3. Hidden states are in circles, observations in squares. This figure is adopted from \cite{slp}}
+  \label{fig:vi}
+\end{figure*}
+
 
 %\subsection{2.5 Gaussian Mixture Model}
 
@@ -185,7 +220,7 @@ False Acceptance (FA’) is the percentage of identification instances in which 
 
 \bigskip
 \section{4. \textbf{Post-reading questions}}
-In both supervised EP detection and unsupervised EP discovery, \cite{wang2015supervised} propose to utilized the universal phoneme posteriorgram (UPP), derived from a multi-layer perceptron (MLP) trained on corpora of mixed languages, but if this methods can be applied to other dataset? and how to explain the differences of performance between the  two tasks?
+In both supervised EP detection and unsupervised EP discovery, \cite{wang2015supervised} propose to utilize the universal phoneme posteriorgram (UPP), derived from a multi-layer perceptron (MLP) trained on corpora of mixed languages, but can it be applied to other datasets? And how to explain the differences of performance between the  two tasks?
 
 %\newpage
 
