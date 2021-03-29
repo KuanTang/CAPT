@@ -78,40 +78,72 @@ Preliminary experiments offered very encouraging results.  As the experimental r
 \section{2. \textbf{Theoretical Framework}}
 \subsection{2.1 \textbf{Error Patterns}}
 
-\noindent Error patterns (EPs) in pronunciation training are frequently encountered mispronunciations that have intrinsic commonalities. In other words, mispronunciations of the same error pattern usually display a high level of intra-group similarity, although they can still be very close to the canonical pronunciation or other EPs.\\
+\textbf{Error patterns} (EPs) in pronunciation training are frequently encountered mispronunciations that have intrinsic commonalities. In other words, mispronunciations of the same error pattern usually display a high level of intra-group similarity, although they can still be very close to the canonical pronunciation or other EPs.\\
 
-\noindent The discovery and detection of EPs can help give more informative and targeted feedbacks in pronunciation training. For example, language learners of different L1s may all pronunce the word wrong (wrong as in deviatation from the canonical pronunciation), but their mispronunciations can be incorrect in different ways. It would be more helpful if the CAPT system can provide feedbacks that are specific enough to show the area of improvement. EPs answer the question "In what way is the given pronunciation wrong?" instead of simply stating it as an incorrect pronunciation.
-\subsection{2.1.1. Supervised EP detection}
-\noindent
-\subsection{2.1.2. Unsupervised EP discovery}
-\noindent
+EPs can help give more informative and targeted feedbacks in pronunciation training. For example, language learners of different L1s may all pronunce the word wrong (wrong as in deviatation from the canonical pronunciation), but their mispronunciations can be incorrect in different ways. It would be more helpful if the CAPT system can provide feedbacks that are specific enough to show the area of improvement. EPs answer the question \textbf{\textit{"In what way is the given pronunciation wrong?"}} instead of simply stating it as an incorrect pronunciation.\\
 
 
-\subsection{2.2 \textbf{From Perceptrons to Multilayer Perceptrons}}
+\subsection{2.1.1 \textbf{Supervised EP Detection and Unsupervised EP Discovery}}
+\textbf{Supervised EP detection}, the most commonly used technique, relies on linguistic expertise of not only the target language, but also the L1s of the learners. Thus defining a full-coverage EP dictionary for different language pairs or mixed languages can already be very expensive. As explained above, EPs are similar to their canonical pronunciations. Apart from that, EPs that deviates from the same standard native pronunciation are also similar to each other, making EP detection a rather difficult task even if EP dictionaries can be provided, either generated manually or automatically derived (the task of \textbf{unsupervised EP discovery}). Unsupervised EP discovery aims to derive EPs from corpora directly, without language-based knowledge as precursor. \\
 
-A Perceptron is a single-neuron model that acts as a \textbf{binary linear classifier}. It is inspired by the biological neuron and can be seen as an abstraction of it. The perceptron receives a real-valued feature vector as input, it also has a weight vector associated with the input vector, which is to be trained. A weighted sum is calculated and passed into an activation function before the output layer. There are varies kinds of activation functions, they help normalise the weighted sum to a range between 0 and 1, or, in some cases, -1 and 1. Like the biological neuron needs an action potential above the threshold of -55 mA to "fire", the perceptron neuron uses the activation function and decides whether to pass on the output or not (acting like a gate), or, in the case of a binary classifier, it decides if the input belongs to a class or not. In the case of the example below, a step function is used where 0 is the threshold, everything above 0 is mapped to 1 and 0 otherwise. 
-\begin{figure*}
+To put it simply, supervised EP detection is like putting pronunciation instances into a divided space, like the box displayed in Figure \ref{fig:box}, each cell is an EP advised by experts. The division of the space depends on the training of the model. On the other hand, unsupervised EP discovery do not presuppose the boundaries or the number of EPs (at first). Take \textbf{Hierarchical Agglomerative Clustering} (HAC) as an example, the algorithm starts with each instance in its own cluster and then simply compares the instances using distance\sidenote{There are many distance measures to choose from, to name a few, Euclidean distance, Manhattan distance...} between them in high-dimensional space, the most similar instances are grouped together, until all instances are in the same group. Categories/clusters are in this sense "self-organised" in a bottom-up manner and can be adjusted depending on the desired granularity. This is where human make decisions, a high cut-off at the resulting dendrogram in Figure \ref{fig:dendro} means fewer classes while a low cut-off produces more classes. 
+\bigskip
+\begin{marginfigure}
+  \includegraphics{box.png}
+  \caption{A divided box, adopted from p.9 of \url{http://fanfoyan.com/audio/naga.pdf}}
+  \label{fig:box}
+\end{marginfigure}
+\vspace{5em}
+\begin{figure}
+  \includegraphics{dendro.png}
+  \caption{Dendrogram resulting from HAC, adopted from \cite{wang2015supervised}}
+  \label{fig:dendro}
+\end{figure}
+
+\subsection{2.2 \textbf{Heterogeneous Initialization of Acoustic Modeling of EPs}}
+
+In supervised detection of EPs, an \textbf{acoustic model} (AM) is needed for each EP. \cite{wang2015supervised} asked language teachers to create an extensive set 0f 152 EPs, whose description is based on the phonemes of Chinese and English. For example, \textit{l\_000} represents the canonical pronunciation of l, while \textit{l\_010} is defined as something pronounced like the English \textit{l}. Since EPs are defined using a  \textbf{\textit{"pronounced-as"}} relationship\sidenote{Notice that the \textbf{\textit{"pronounced-as"}} relationship only describes a pronunciation instance and has nothing to do with the learners' L1.}, it became natural to use existing acoustic models for phonemes as a starting point. Duplicates of phoneme models trained for other corpora are used as the initial EP models, this process is referred to as \textbf{\textit{heterogeneous model initialization}}. A comparison of \textit{heterogeneous model initialization} and \textbf{\textit{homogeneous model initialization}} is illustrated in Figure \ref{fig:init}, where a clear benefit of heterogenous initialization can be seen: Without any anchor points, apart from the experience and knowledge of language teachers, different EPs of the same canonical pronunciation are hard to locate with respect to the correct pronunciation (homogeneous) in the conceptual pronunciation space, let alone to describe them in a human-understandable way, which also makes it almost impossible for human annotators to create target labels. Heterogenous initialization provides the ground to describe the error patterns, which facilitates human understanding as well as acoustic modeling.
+
+\begin{figure}
+  \includegraphics{init.png}
+  \caption{Homogeneous and heterogeneous initialization for acoustic modeling
+of EPs in the conceptual pronunciation space, adopted from \cite{wang2015supervised}}
+  \label{fig:init}
+\end{figure}
+
+\subsection{2.3 \textbf{From Perceptrons to Multilayer Perceptrons}}
+
+A \textbf{Perceptron} is a single-neuron model that acts as a \textbf{binary linear classifier}. It is inspired by the biological neuron and can be seen as an abstraction of it. The perceptron receives a real-valued feature vector as input, it also has a weight vector associated with the input vector, which is to be trained. A weighted sum is calculated and passed into an activation function before the output layer. There are varies kinds of activation functions, they help normalise the weighted sum to a range between 0 and 1, or, in some cases, -1 and 1. Like the biological neuron needs an action potential above the threshold of -55 mA to "fire", the perceptron neuron uses the activation function and decides whether to pass on the output or not (acting like a gate), or, in the case of a binary classifier, it decides if the input belongs to a class or not. In the case of the example below, a step function is used where 0 is the threshold, everything above 0 is mapped to 1 and 0 otherwise. \\
+\begin{figure*}[h!]
+  \centering
   \includegraphics{perceptron1.png}
   \caption{biological neuron vs. perceptron, adopted from \cite{IF:perceptron}}
 \end{figure*}
-
-\noindent As suggested by the name, multilayer perceptrons (MLPs) have more than one (usually fully connected) layers. The most simple schematic MLPs illustrated in Figure \ref{fig:mlp} have one input layer, a hidden layer and an output layer. There can be more than one hidden layers, but usually one is enough. MLPs are a class of feedforward artificial neural network (ANN), with "feedforward" meaning single-way, acyclic movement, just like biological neurons.\\ 
-\begin{figure}
+As suggested by the name, \textbf{multilayer perceptrons} (MLPs) have more than one (usually fully connected) layers. The most simple schematic MLPs illustrated in Figure \ref{fig:mlp} have one input layer, a hidden layer and an output layer. There can be more than one hidden layers, but usually one is enough. MLPs are a class of feedforward artificial neural network (ANN), with "\textbf{feedforward}" meaning single-way, acyclic movement, just like biological neurons.\\ 
+\begin{figure}[h!]
+\centering
   \includegraphics[width=0.9\textwidth]{mlp3.png}
   \caption{A schematic multilayer perceptron model, adopted from \cite{becominghuman:MLP}}
   \label{fig:mlp}
 \end{figure}
-\noindent MLPs use backpropagation (BP) as training method, which compares the results to the desired value and adjust the weights that contributed to the error most in each layer using the chain rule. The adjusted weights are used in the next training cycle. The training process terminates when the loss function is minimised.
+\newpage
+MLPs use \textbf{backpropagation} (BP) as training method, which compares the results to the desired value and adjust the weights that contributed to the error most in each layer using the chain rule. The adjusted weights are used in the next training cycle. The training process terminates when the loss function is minimised.
 
 
-\subsection{2.3 \textbf{Universal Phoneme Posteriorgram}}
-\noindent Universal Phoneme Posteriorgram (UPP) is used as the fundamental frame-level feature of supervised EP discovery in \cite{wang2015supervised}. The motivation behind this is has to do with the nature of EPs in language learning. Usually EPs are caused by articulator mechanisms or acoustic phenomena present in the target language but missing from learners' native languages as suggested by \cite{wang2015supervised}. However, the discrepancies between mispronunced instances and canonical pronounciations can be small but still obvious to the native ear. Therefore if one simply compare the pronunciations from learners of mixed languages in the same acoustic space, for example the acoustic space spanned by MFCCs, the pronunciations are usually too close to be distinguished by clustering algorithms. What UPP extraction does is to use an MLP as a posterior probability estimator to span the pronunciation instances by phoneme posteriors. Each frame of MFCC feature is transformed into a vector of posterior probabilities of all predefined phonemes in the training corpora of mixed languages.
+\subsection{2.4 \textbf{Universal Phoneme Posteriorgram}}
+\noindent \textbf{Universal Phoneme Posteriorgram} (UPP) is used as the fundamental frame-level feature of supervised EP discovery in \cite{wang2015supervised}. The motivation behind this is has to do with the nature of EPs in language learning. Usually EPs are caused by articulator mechanisms or acoustic phenomena present in the target language but missing from learners' native languages as suggested by \cite{wang2015supervised}. However, the discrepancies between mispronunced instances and canonical pronounciations can be small but still obvious to the native ear. Therefore if one simply compare the pronunciations from learners of mixed languages in the same acoustic space, for example the acoustic space spanned by MFCCs, the pronunciations are usually too close to be distinguished by clustering algorithms. What UPP extraction does is to use an MLP as a posterior probability estimator to span the pronunciation instances by phoneme posteriors. Each frame of MFCC feature is transformed into a vector of posterior probabilities of all predefined phonemes in the training corpora of mixed languages.
+\begin{figure}[h!]
+\centering
+  \includegraphics[width=0.81\textwidth]{upp.png}
+  \caption{The concept of \textbf{UPP extraction}: mapping from acoustic space (represented by MFCCs) to posterior space (represented by UPPs) using a posterior probability estimator (MLP) so as to better distinguish the pronunciation patterns, adopted from \cite{wang2015supervised}}
+  \label{fig:upp}
+\end{figure}
 
 
 
-\subsection{2.4 Hidden Markov Model}
+%\subsection{2.4 Hidden Markov Model}
 
-\subsection{2.5 Gaussian Mixture Model}
+%\subsection{2.5 Gaussian Mixture Model}
 
 
 \clearpage
@@ -133,7 +165,7 @@ Based on the definition of the Cluster,  as an unsupervised learning technique i
 It could also be considered as Exploratory Data Analysis (EDA) \footnote{Exploratory Data Analysis refers to the critical process of performing initial investigations on data to discover patterns to spot anomalies to test hypothesis and to check assumptions with the help of summary statistics and graphical representations.} process which help us to discover hidden patterns of interest or structure in data. Clustering can work as a standalone tool to get the insights about the data distribution or as a preprocessing step in other algorithms.
 
 
-In \cite{wang2015supervised}, they uses Hierarchical Agglomerative Clustering (HAC) to define segment-level features. According to \cite{chhabra2020fair}, Hierarchical Agglomerative Clustering (HAC) refers to a class of greedy unsupervised learning algorithms that seek to build a hierarchy between data points while clustering them in a bottom-up fashion. The HAC algorithm used in \cite{wang2015supervised} automatically arranges the frames in a speech segment into a tree-structured hierarchy based on the merging order of sub-segments, in which similar adjacent frames are clustered together in lower layers, while relatively dissimilar adjacent clusters are merged in higher layers. 
+In \cite{wang2015supervised}, they uses \textbf{Hierarchical Agglomerative Clustering} (HAC) to define segment-level features. According to \cite{chhabra2020fair}, Hierarchical Agglomerative Clustering (HAC) refers to a class of greedy unsupervised learning algorithms that seek to build a hierarchy between data points while clustering them in a bottom-up fashion. The HAC algorithm used in \cite{wang2015supervised} automatically arranges the frames in a speech segment into a tree-structured hierarchy based on the merging order of sub-segments, in which similar adjacent frames are clustered together in lower layers, while relatively dissimilar adjacent clusters are merged in higher layers. 
 
 
 \subsection{\textbf{3.2 Metrics}}
@@ -152,7 +184,7 @@ False Acceptance (FA’) is the percentage of identification instances in which 
 \end{figure*}
 
 \bigskip
-\section{4. Post-reading questions}
+\section{4. \textbf{Post-reading questions}}
 In both supervised EP detection and unsupervised EP discovery, \cite{wang2015supervised} propose to utilized the universal phoneme posteriorgram (UPP), derived from a multi-layer perceptron (MLP) trained on corpora of mixed languages, but if this methods can be applied to other dataset? and how to explain the differences of performance between the  two tasks?
 
 %\newpage
