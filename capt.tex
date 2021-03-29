@@ -64,9 +64,9 @@ How to apply Speech Processing Technology in Second Language Learning (SLL)? How
 
 
 
-\cite{wang2015supervised} propose two new novel frameworks for both Supervised Error Patterns Detection and Unsupervised EP Discovery.  For supervised EP detection,  they use hierarchical multi-layer perceptrons (MLPs) as the EP classifiers to be integrated with the baseline using HMM/GMM in a two-pass Viterbi decoding architecture.  As for unsupervised EP discovery, they use the Hierarchical Agglomerative Clustering (HAC) algorithm to explore sub-segmental variation within phoneme segments and produce fixed-length segment-level feature vectors to distinguish different EPs. 
+\cite{wang2015supervised} propose two novel frameworks for both Supervised Error Patterns Detection and Unsupervised EP Discovery.  For supervised EP detection,  they use hierarchical multi-layer perceptrons (MLPs) as the EP classifiers to be integrated with the baseline using HMM/GMM in a two-pass Viterbi decoding architecture.  As for unsupervised EP discovery, they use the Hierarchical Agglomerative Clustering (HAC) algorithm to explore sub-segmental variation within phoneme segments and produce fixed-length segment-level feature vectors to distinguish different EPs. 
 
-They tested K-means \sidenote{Assuming a known number of EPs} and the Gaussian mixture model with the minimum description length principle \sidenote{Estimating an unknown number of EPs} for EP discovery.  And they also propose to use the universal phoneme posterior gray (UPP), derived from an MLP trained on corpora of mixed languages, as frame-level features in both supervised detection and unsupervised discovery of EPs. 
+They tested K-means \sidenote{Assuming a known number of EPs} and the Gaussian mixture model with the minimum description length principle \sidenote{Estimating an unknown number of EPs} for EP discovery.  And they also propose to use the universal phoneme posteriorgram (UPP), derived from an MLP trained on corpora of mixed languages, as frame-level features in both supervised detection and unsupervised discovery of EPs. 
 
 Preliminary experiments offered very encouraging results.  As the experimental results have shown, comparing with other models, the new framework enhances the power of EP diagnosis, and using UPP achieves the best performance and is useful in analyzing the mispronunciation produced by language learners.
 
@@ -119,7 +119,7 @@ A \textbf{Perceptron} is a single-neuron model that acts as a \textbf{binary lin
   \includegraphics{perceptron1.png}
   \caption{biological neuron vs. perceptron, adopted from \cite{IF:perceptron}}
 \end{figure*}
-As suggested by the name, \textbf{multilayer perceptrons} (MLPs) have more than one (usually fully connected) layer. The most simple schematic MLP structure illustrated in Figure \ref{fig:mlp} has one input layer, a hidden layer, and an output layer. There can be more than one hidden layer, but usually one is enough. MLPs are a class of feedforward artificial neural networks (ANN), with "\textbf{feedforward}" meaning single-way, acyclic movement, just like biological neurons.\\ 
+As suggested by the name, \textbf{multilayer perceptrons} (MLPs) have more than one (usually fully connected) layer. The most simple schematic MLP structure illustrated in Figure \ref{fig:mlp} has one input layer, a hidden layer, and an output layer. There can be more than one hidden layer, but usually one is enough. MLPs are a class of feedforward artificial neural network (ANN), with "\textbf{feedforward}" meaning single-way, acyclic movement, just like biological neurons.\\ 
 \begin{figure}[h!]
 \centering
   \includegraphics[width=0.9\textwidth]{mlp3.png}
@@ -127,7 +127,7 @@ As suggested by the name, \textbf{multilayer perceptrons} (MLPs) have more than 
   \label{fig:mlp}
 \end{figure}
 \newpage
-MLPs use \textbf{backpropagation} (BP) as a training method, which compares the results to the desired value and adjust the weights that contributed to the error most in each layer using the chain rule. The adjusted weights are used in the next training cycle. The training process terminates when the loss function is minimized.
+MLPs use \textbf{backpropagation} (BP) as training method, which compares the results to the desired value and adjust the weights that contributed to the error most in each layer using the chain rule. The adjusted weights are used in the next training cycle. The training process terminates when the loss function is minimized.
 
 
 \subsection{2.4 \textbf{Universal Phoneme Posteriorgram}}
@@ -166,10 +166,10 @@ Hidden Markov Model (HMM) in Speech Recognition is used to model units of speech
 
 One of the problems that HMM can solve is the \textbf{decoding problem}:\\
 \bigskip
-\textbf{\textit{Given an observation sequence and an HMM, find the best-hidden state sequence.}}\\
+\textbf{\textit{Given an observation sequence and an HMM, find the best hidden state sequence.}}\\
 \bigskip
-Using the ice-cream example above, it means that if for the last 3 days the number of ice-creams Jason had is the observed sequence 3 1 3, what is the weather of these three days most likely like?\\
-\textbf{Viterbi algorithm} solves this decoding problem by finding (and remembering) the best (most likely) path at each step. Figure \ref{fig:vi} shows the observations in squares and hidden states in circles. All possible states are drawn, but only the current most likely state is chosen to form the optimal path. For instance, since the initial weather distribution for (\textsc{hot}, \textsc{cold}) is (0.8, 0.2), and on the first day, Jason had 3 ice-creams, the probability of the hidden state being \textsc{hot} is the product of 0.8 and the observation likelihood\sidenote{the probability of Jason eating 3 ice-creams given it is a hot day}. Similarly, we can calculate the probability of the hidden state being \textsc{cold}. Since \textsc{hot} is 0.32 and \textsc{cold} is 0.02, we pick \textsc{hot}. For the next steps, we don't need the initial weather distribution $\pi$ anymore, we should only consider the current hidden state and then transition to the next possible hidden states. Using Viterbi decoding, we obtain the thick arrows as the optimal path.
+Using the ice-cream example above, it means that if for the last 3 days the number of ice-creams Jason had is the observed sequence 3 1 3, what are the weather conditions of these three days most likely like?\\
+\textbf{Viterbi algorithm} solves this decoding problem by finding (and remembering) the best (most likely) path at each step. Figure \ref{fig:vi} shows the observations in squares and hidden states in circles. All possible states are drawn, but only the current most likely state is chosen to form the optimal path. For instance, since the initial weather distribution for (\textsc{hot}, \textsc{cold}) is (0.8, 0.2), and on the first day, Jason had 3 ice-creams, the probability of the hidden state being \textsc{hot} is the product of 0.8 and the observation likelihood\sidenote{the probability of Jason eating 3 ice-creams given it is a hot day}. Similarly, we can calculate the probability of the hidden state being \textsc{cold}. Since \textsc{hot} is 0.32 and \textsc{cold} is 0.02, we pick \textsc{hot}. For the next steps, we don't need the initial weather distribution $\pi$ anymore, we should only consider the current hidden state and the transition to the next possible hidden states. Using Viterbi decoding, we obtain the thick arrows as the optimal path.
 
 \begin{figure*}
  \includegraphics[width=1\textwidth]{viterbi.png}
